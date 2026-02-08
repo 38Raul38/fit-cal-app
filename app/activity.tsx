@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 type ActivityLevel = "not_active" | "light" | "active" | "very_active";
