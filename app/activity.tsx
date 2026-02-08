@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 type ActivityLevel = "not_active" | "light" | "active" | "very_active";
@@ -13,6 +13,46 @@ export default function Activity() {
     active: new Animated.Value(1),
     very_active: new Animated.Value(1),
   });
+
+  // Анимация появления
+  const [fadeAnims] = useState({
+    title: new Animated.Value(0),
+    not_active: new Animated.Value(0),
+    light: new Animated.Value(0),
+    active: new Animated.Value(0),
+    very_active: new Animated.Value(0),
+  });
+
+  useEffect(() => {
+    // Поэтапное появление элементов
+    Animated.stagger(150, [
+      Animated.timing(fadeAnims.title, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnims.not_active, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnims.light, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnims.active, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnims.very_active, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const handlePressIn = (activityLevel: ActivityLevel) => {
     Animated.spring(scaleAnim[activityLevel], {
@@ -32,12 +72,29 @@ export default function Activity() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>What's your lifestyle like?</Text>
-      <Text style={styles.subtitle}>
-        Not counting workouts—we'll track those separately
-      </Text>
+      <View style={styles.header}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Text style={styles.backArrow}>←</Text>
+        </Pressable>
+        <View style={styles.progressBar}>
+          <View style={[styles.progressFill, { width: "50%" }]} />
+        </View>
+      </View>
 
-      <Animated.View style={{ transform: [{ scale: scaleAnim.not_active }] }}>
+      <View style={styles.content}>
+        <Animated.View style={{ opacity: fadeAnims.title }}>
+          <Text style={styles.title}>What's your lifestyle like?</Text>
+          <Text style={styles.subtitle}>
+            Not counting workouts—we'll track those separately
+          </Text>
+        </Animated.View>
+
+        <Animated.View
+          style={{
+            opacity: fadeAnims.not_active,
+            transform: [{ scale: scaleAnim.not_active }],
+          }}
+        >
         <Pressable
           style={[
             styles.option,
@@ -59,9 +116,14 @@ export default function Activity() {
             Spend most of the day sitting
           </Text>
         </Pressable>
-      </Animated.View>
+        </Animated.View>
 
-      <Animated.View style={{ transform: [{ scale: scaleAnim.light }] }}>
+        <Animated.View
+          style={{
+            opacity: fadeAnims.light,
+            transform: [{ scale: scaleAnim.light }],
+          }}
+        >
         <Pressable
           style={[
             styles.option,
@@ -83,9 +145,14 @@ export default function Activity() {
             Spend most of the day on your feet
           </Text>
         </Pressable>
-      </Animated.View>
+        </Animated.View>
 
-      <Animated.View style={{ transform: [{ scale: scaleAnim.active }] }}>
+        <Animated.View
+          style={{
+            opacity: fadeAnims.active,
+            transform: [{ scale: scaleAnim.active }],
+          }}
+        >
         <Pressable
           style={[
             styles.option,
@@ -107,9 +174,14 @@ export default function Activity() {
             Physical activity most of the day
           </Text>
         </Pressable>
-      </Animated.View>
+        </Animated.View>
 
-      <Animated.View style={{ transform: [{ scale: scaleAnim.very_active }] }}>
+        <Animated.View
+          style={{
+            opacity: fadeAnims.very_active,
+            transform: [{ scale: scaleAnim.very_active }],
+          }}
+        >
         <Pressable
           style={[
             styles.option,
@@ -133,24 +205,18 @@ export default function Activity() {
         </Pressable>
       </Animated.View>
 
-      <View style={styles.buttonContainer}>
-        <Pressable
-          style={styles.buttonBack}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.buttonBackText}>Back</Text>
-        </Pressable>
-
-        <Pressable
-          style={[
-            styles.buttonNext,
-            !activity && styles.buttonDisabled,
-          ]}
-          disabled={!activity}
-          onPress={() => router.push("/gender")}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </Pressable>
+        <View style={styles.buttonContainer}>
+          <Pressable
+            style={[
+              styles.buttonNext,
+              !activity && styles.buttonDisabled,
+            ]}
+            disabled={!activity}
+            onPress={() => router.push("/gender")}
+          >
+            <Text style={styles.buttonText}>Next</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -159,9 +225,39 @@ export default function Activity() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F5F5F7",
+  },
+  header: {
+    paddingTop: 50,
+    paddingHorizontal: 24,
+    backgroundColor: "#FFFFFF",
+    paddingBottom: 16,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    marginBottom: 12,
+  },
+  backArrow: {
+    fontSize: 28,
+    color: "#0F0F12",
+  },
+  progressBar: {
+    height: 4,
+    backgroundColor: "#E5E5EA",
+    borderRadius: 2,
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    backgroundColor: "#0F0F12",
+  },
+  content: {
+    flex: 1,
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 24,
-    paddingTop: 80,
+    paddingTop: 32,
     justifyContent: "center",
   },
 
@@ -211,26 +307,10 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     marginTop: 32,
-    flexDirection: "row",
-    gap: 12,
-  },
-  buttonBack: {
-    flex: 1,
-    height: 62,
-    borderRadius: 31,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 2,
-    borderColor: "#0F0F12",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonBackText: {
-    color: "#0F0F12",
-    fontSize: 18,
-    fontWeight: "700",
+    marginHorizontal: 24,
+    marginBottom: 40,
   },
   buttonNext: {
-    flex: 1,
     height: 62,
     borderRadius: 31,
     backgroundColor: "#0F0F12",

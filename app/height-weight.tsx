@@ -1,14 +1,18 @@
 // app/height-weight.tsx
-import { useState } from "react";
-import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function HeightWeight() {
   const router = useRouter();
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState(170);
+  const [weight, setWeight] = useState(70);
 
-  const isValid = height.trim().length > 0 && weight.trim().length > 0;
+  // Генерация значений для рулетки роста (140-220 см)
+  const heightValues = Array.from({ length: 81 }, (_, i) => 140 + i);
+  // Генерация значений для рулетки веса (40-150 кг)
+  const weightValues = Array.from({ length: 111 }, (_, i) => 40 + i);
 
   return (
     <View style={styles.container}>
@@ -17,48 +21,61 @@ export default function HeightWeight() {
         This helps us calculate your daily calorie needs
       </Text>
 
-      <View style={styles.field}>
-        <Text style={styles.label}>Height (cm)</Text>
-        <TextInput
-          value={height}
-          onChangeText={setHeight}
-          keyboardType="numeric"
-          placeholder="e.g. 175"
-          placeholderTextColor="#8E8E93"
-          style={styles.input}
-        />
+      <View style={styles.pickersContainer}>
+        <View style={styles.pickerWrapper}>
+          <Text style={styles.label}>Height</Text>
+          <View style={styles.pickerBox}>
+            <Picker
+              selectedValue={height}
+              onValueChange={(value) => setHeight(value)}
+              style={styles.picker}
+              itemStyle={styles.pickerItem}
+            >
+              {heightValues.map((value) => (
+                <Picker.Item
+                  key={value}
+                  label={`${value} cm`}
+                  value={value}
+                />
+              ))}
+            </Picker>
+          </View>
+        </View>
+
+        <View style={styles.pickerWrapper}>
+          <Text style={styles.label}>Weight</Text>
+          <View style={styles.pickerBox}>
+            <Picker
+              selectedValue={weight}
+              onValueChange={(value) => setWeight(value)}
+              style={styles.picker}
+              itemStyle={styles.pickerItem}
+            >
+              {weightValues.map((value) => (
+                <Picker.Item
+                  key={value}
+                  label={`${value} kg`}
+                  value={value}
+                />
+              ))}
+            </Picker>
+          </View>
+        </View>
       </View>
 
-      <View style={styles.field}>
-        <Text style={styles.label}>Weight (kg)</Text>
-        <TextInput
-          value={weight}
-          onChangeText={setWeight}
-          keyboardType="numeric"
-          placeholder="e.g. 70"
-          placeholderTextColor="#8E8E93"
-          style={styles.input}
-        />
-      </View>
-
-      <View style={styles.footer}>
+      <View style={styles.buttonContainer}>
         <Pressable
+          style={styles.buttonBack}
           onPress={() => router.back()}
-          style={({ pressed }) => [styles.backBtn, pressed && styles.pressed]}
         >
-          <Text style={styles.backText}>BACK</Text>
+          <Text style={styles.buttonBackText}>Back</Text>
         </Pressable>
 
         <Pressable
-          disabled={!isValid}
+          style={styles.buttonNext}
           onPress={() => router.push("/results")}
-          style={({ pressed }) => [
-            styles.nextBtn,
-            !isValid && styles.nextDisabled,
-            pressed && isValid && styles.pressed,
-          ]}
         >
-          <Text style={styles.nextText}>NEXT</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </Pressable>
       </View>
     </View>
@@ -84,60 +101,65 @@ const styles = StyleSheet.create({
     color: "#6B6B70",
     marginBottom: 32,
   },
-  field: {
-    marginBottom: 18,
+  pickersContainer: {
+    marginBottom: 32,
+  },
+  pickerWrapper: {
+    marginBottom: 24,
   },
   label: {
-    fontSize: 14,
-    color: "#6B6B70",
-    marginBottom: 8,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#0F0F12",
+    marginBottom: 12,
+    textAlign: "center",
   },
-  input: {
-    height: 56,
-    borderRadius: 16,
+  pickerBox: {
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: "#E5E5EA",
-    paddingHorizontal: 16,
-    fontSize: 18,
+    backgroundColor: "#FAFAFA",
+    overflow: "hidden",
+  },
+  picker: {
+    height: 180,
+  },
+  pickerItem: {
+    fontSize: 24,
+    fontWeight: "600",
     color: "#0F0F12",
   },
-  footer: {
-    marginTop: "auto",
+  buttonContainer: {
+    marginTop: 32,
     flexDirection: "row",
-    gap: 14,
-    paddingBottom: 28,
+    gap: 12,
   },
-  backBtn: {
+  buttonBack: {
     flex: 1,
-    height: 52,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 2,
+    borderColor: "#0F0F12",
     justifyContent: "center",
     alignItems: "center",
   },
-  nextBtn: {
+  buttonBackText: {
+    color: "#0F0F12",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  buttonNext: {
     flex: 1,
-    height: 52,
-    borderRadius: 14,
+    height: 62,
+    borderRadius: 31,
     backgroundColor: "#0F0F12",
     justifyContent: "center",
     alignItems: "center",
   },
-  nextDisabled: {
-    opacity: 0.35,
-  },
-  backText: {
-    color: "#0F0F12",
-    fontWeight: "800",
-    letterSpacing: 0.6,
-  },
-  nextText: {
+  buttonText: {
     color: "#FFFFFF",
-    fontWeight: "800",
-    letterSpacing: 0.6,
-  },
-  pressed: {
-    opacity: 0.9,
+    fontSize: 18,
+    fontWeight: "700",
   },
 });

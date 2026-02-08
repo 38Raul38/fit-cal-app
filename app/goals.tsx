@@ -1,6 +1,6 @@
 // app/goals.tsx
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 type Goal = "lose" | "maintain" | "gain";
@@ -13,6 +13,40 @@ export default function Goals() {
     maintain: new Animated.Value(1),
     gain: new Animated.Value(1),
   });
+
+  // Анимация появления
+  const [fadeAnims] = useState({
+    title: new Animated.Value(0),
+    lose: new Animated.Value(0),
+    maintain: new Animated.Value(0),
+    gain: new Animated.Value(0),
+  });
+
+  useEffect(() => {
+    // Поэтапное появление элементов
+    Animated.stagger(150, [
+      Animated.timing(fadeAnims.title, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnims.lose, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnims.maintain, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnims.gain, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const handlePressIn = (goalType: Goal) => {
     Animated.spring(scaleAnim[goalType], {
@@ -32,12 +66,29 @@ export default function Goals() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>What's your goal?</Text>
-      <Text style={styles.subtitle}>
-        We'll adjust your daily calories to match it
-      </Text>
+      <View style={styles.header}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Text style={styles.backArrow}>←</Text>
+        </Pressable>
+        <View style={styles.progressBar}>
+          <View style={[styles.progressFill, { width: "33%" }]} />
+        </View>
+      </View>
 
-      <Animated.View style={{ transform: [{ scale: scaleAnim.lose }] }}>
+      <View style={styles.content}>
+        <Animated.View style={{ opacity: fadeAnims.title }}>
+          <Text style={styles.title}>What's your goal?</Text>
+          <Text style={styles.subtitle}>
+            We'll adjust your daily calories to match it
+          </Text>
+        </Animated.View>
+
+        <Animated.View
+          style={{
+            opacity: fadeAnims.lose,
+            transform: [{ scale: scaleAnim.lose }],
+          }}
+        >
         <Pressable
           style={[styles.option, goal === "lose" && styles.optionSelected]}
           onPress={() => setGoal("lose")}
@@ -49,9 +100,14 @@ export default function Goals() {
           </Text>
           <Text style={styles.optionDesc}>Cut fat and get leaner</Text>
         </Pressable>
-      </Animated.View>
+        </Animated.View>
 
-      <Animated.View style={{ transform: [{ scale: scaleAnim.maintain }] }}>
+        <Animated.View
+          style={{
+            opacity: fadeAnims.maintain,
+            transform: [{ scale: scaleAnim.maintain }],
+          }}
+        >
         <Pressable
           style={[styles.option, goal === "maintain" && styles.optionSelected]}
           onPress={() => setGoal("maintain")}
@@ -63,9 +119,14 @@ export default function Goals() {
           </Text>
           <Text style={styles.optionDesc}>Stay at your current weight</Text>
         </Pressable>
-      </Animated.View>
+        </Animated.View>
 
-      <Animated.View style={{ transform: [{ scale: scaleAnim.gain }] }}>
+        <Animated.View
+          style={{
+            opacity: fadeAnims.gain,
+            transform: [{ scale: scaleAnim.gain }],
+          }}
+        >
         <Pressable
           style={[styles.option, goal === "gain" && styles.optionSelected]}
           onPress={() => setGoal("gain")}
@@ -79,21 +140,15 @@ export default function Goals() {
         </Pressable>
       </Animated.View>
 
-      <View style={styles.buttonContainer}>
-        <Pressable
-          style={styles.buttonBack}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.buttonBackText}>Back</Text>
-        </Pressable>
-
-        <Pressable
-          style={[styles.buttonNext, !goal && styles.buttonDisabled]}
-          disabled={!goal}
-          onPress={() => router.push("/activity")}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </Pressable>
+        <View style={styles.buttonContainer}>
+          <Pressable
+            style={[styles.buttonNext, !goal && styles.buttonDisabled]}
+            disabled={!goal}
+            onPress={() => router.push("/activity")}
+          >
+            <Text style={styles.buttonText}>Next</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -102,9 +157,39 @@ export default function Goals() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F5F5F7",
+  },
+  header: {
+    paddingTop: 50,
+    paddingHorizontal: 24,
+    backgroundColor: "#FFFFFF",
+    paddingBottom: 16,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    marginBottom: 12,
+  },
+  backArrow: {
+    fontSize: 28,
+    color: "#0F0F12",
+  },
+  progressBar: {
+    height: 4,
+    backgroundColor: "#E5E5EA",
+    borderRadius: 2,
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    backgroundColor: "#0F0F12",
+  },
+  content: {
+    flex: 1,
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 24,
-    paddingTop: 80,
+    paddingTop: 32,
     justifyContent: "center",
   },
   title: {
@@ -149,26 +234,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 32,
-    flexDirection: "row",
-    gap: 12,
-  },
-  buttonBack: {
-    flex: 1,
-    height: 62,
-    borderRadius: 31,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 2,
-    borderColor: "#0F0F12",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonBackText: {
-    color: "#0F0F12",
-    fontSize: 18,
-    fontWeight: "700",
+    marginHorizontal: 24,
+    marginBottom: 40,
   },
   buttonNext: {
-    flex: 1,
     height: 62,
     borderRadius: 31,
     backgroundColor: "#0F0F12",
