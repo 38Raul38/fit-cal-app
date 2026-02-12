@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
-import { useProfile } from "../context/ProfileContext";
 import { useEffect, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { useProfile } from "../context/ProfileContext";
 
 export default function Gender() {
   const router = useRouter();
@@ -12,7 +12,6 @@ export default function Gender() {
     male: new Animated.Value(1),
   });
 
-  // Анимация появления
   const [fadeAnims] = useState({
     title: new Animated.Value(0),
     female: new Animated.Value(0),
@@ -20,7 +19,6 @@ export default function Gender() {
   });
 
   useEffect(() => {
-    // Поэтапное появление элементов
     Animated.stagger(150, [
       Animated.timing(fadeAnims.title, {
         toValue: 1,

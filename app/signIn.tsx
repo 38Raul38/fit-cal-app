@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 
-/* ───── regex (same as signUp) ───── */
 const EMAIL_RE = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
 
 function validateEmail(v: string) {
@@ -29,7 +28,6 @@ function validatePassword(v: string) {
   return "";
 }
 
-/* ═══════════════════════════════════════════ */
 export default function SignIn() {
   const router = useRouter();
   const { colors } = useTheme();
@@ -51,7 +49,6 @@ export default function SignIn() {
     setTouched({ email: true, password: true });
     if (!formValid) return;
     setLoading(true);
-    // TODO: real auth call
     setTimeout(() => {
       setLoading(false);
       router.replace("/(tabs)/home");
@@ -67,7 +64,6 @@ export default function SignIn() {
         contentContainerStyle={styles.scroll}
         keyboardShouldPersistTaps="handled"
       >
-        {/* back */}
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <Text style={[styles.backText, { color: colors.text }]}>← Back</Text>
         </Pressable>
@@ -77,7 +73,6 @@ export default function SignIn() {
           Enter your details to continue
         </Text>
 
-        {/* ─── Email ─── */}
         <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
         <TextInput
           style={[
@@ -101,7 +96,6 @@ export default function SignIn() {
           <Text style={[styles.err, { color: colors.danger }]}>{emailErr}</Text>
         )}
 
-        {/* ─── Password ─── */}
         <Text style={[styles.label, { color: colors.textSecondary }]}>Password</Text>
         <View style={styles.passRow}>
           <TextInput
@@ -135,14 +129,12 @@ export default function SignIn() {
           <Text style={[styles.err, { color: colors.danger }]}>{passErr}</Text>
         )}
 
-        {/* forgot password */}
         <Pressable style={styles.forgotWrap}>
           <Text style={[styles.forgotText, { color: colors.textSecondary }]}>
             Forgot password?
           </Text>
         </Pressable>
 
-        {/* ─── Submit ─── */}
         <Pressable
           style={({ pressed }) => [
             styles.button,
@@ -168,7 +160,6 @@ export default function SignIn() {
           )}
         </Pressable>
 
-        {/* ─── Link to Sign Up ─── */}
         <Pressable onPress={() => router.push("/signUp")} style={styles.linkWrap}>
           <Text style={[styles.linkLabel, { color: colors.textSecondary }]}>
             Don't have an account?{" "}
@@ -182,7 +173,6 @@ export default function SignIn() {
   );
 }
 
-/* ═══════════ styles ═══════════ */
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   scroll: {

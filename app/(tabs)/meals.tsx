@@ -19,7 +19,7 @@ const MONTHS = [
 
 function getWeekDays(date: Date) {
   const day = date.getDay();
-  const diff = day === 0 ? -6 : 1 - day; // Monday start
+  const diff = day === 0 ? -6 : 1 - day;
   const monday = new Date(date);
   monday.setDate(date.getDate() + diff);
 
@@ -72,7 +72,6 @@ export default function Meals() {
       <Text style={[styles.title, { color: colors.text }]}>Daily Meals</Text>
       <Text style={[styles.subtitle, { color: colors.textMuted }]}>Track your meals throughout the day</Text>
 
-      {/* Calendar Week */}
       <View style={[styles.calendarCard, { backgroundColor: colors.card }]}>
         <View style={styles.calendarHeader}>
           <Text style={[styles.monthText, { color: colors.text }]}>
@@ -134,7 +133,6 @@ export default function Meals() {
         )}
       </View>
 
-      {/* Meal Sections */}
       {mealTypes.map((mealType) => {
         const mealEntries = getEntriesForDate(dateStr, mealType);
         const totalCals = mealEntries.reduce((s, e) => s + e.food.calories * e.quantity, 0);

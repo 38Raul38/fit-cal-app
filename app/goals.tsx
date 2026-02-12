@@ -1,8 +1,8 @@
 // app/goals.tsx
 import { useRouter } from "expo-router";
-import { useProfile } from "../context/ProfileContext";
 import { useEffect, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { useProfile } from "../context/ProfileContext";
 
 type Goal = "lose" | "maintain" | "gain";
 
@@ -16,7 +16,6 @@ export default function Goals() {
     gain: new Animated.Value(1),
   });
 
-  // Анимация появления
   const [fadeAnims] = useState({
     title: new Animated.Value(0),
     lose: new Animated.Value(0),
@@ -25,7 +24,6 @@ export default function Goals() {
   });
 
   useEffect(() => {
-    // Поэтапное появление элементов
     Animated.stagger(150, [
       Animated.timing(fadeAnims.title, {
         toValue: 1,

@@ -115,7 +115,6 @@ export default function Settings() {
     >
       <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
 
-      {/* Profile card */}
       <Pressable
         style={[styles.profileCard, { backgroundColor: colors.card }]}
         onPress={() => router.push("/edit-profile")}
@@ -134,7 +133,6 @@ export default function Settings() {
         <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
       </Pressable>
 
-      {/* Daily targets summary */}
       <View style={[styles.targetsCard, { backgroundColor: colors.card }]}>
         <Text style={[styles.targetsTitle, { color: colors.text }]}>Daily Targets</Text>
         <View style={styles.targetsRow}>
@@ -160,7 +158,6 @@ export default function Settings() {
         </View>
       </View>
 
-      {/* Setting sections */}
       {profileSections.map((section, si) => (
         <View key={si} style={[styles.sectionCard, { backgroundColor: colors.card }]}>
           {section.map((item, ii) => (
@@ -235,7 +232,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
-  /* Profile */
   profileCard: {
     backgroundColor: "#F7F7F9",
     borderRadius: 24,
@@ -273,7 +269,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  /* Targets */
   targetsCard: {
     backgroundColor: "#F7F7F9",
     borderRadius: 24,
@@ -311,7 +306,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#D8D8DC",
   },
 
-  /* Sections */
   sectionCard: {
     backgroundColor: "#F7F7F9",
     borderRadius: 24,

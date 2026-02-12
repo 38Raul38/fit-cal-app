@@ -120,7 +120,6 @@ export default function FoodSearch() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -131,7 +130,6 @@ export default function FoodSearch() {
         <View style={{ width: 40 }} />
       </View>
 
-      {/* Search */}
       <View
         style={[
           styles.searchBar,
@@ -154,7 +152,6 @@ export default function FoodSearch() {
         )}
       </View>
 
-      {/* Tabs */}
       <View style={styles.tabs}>
         <Pressable
           style={[
@@ -200,7 +197,6 @@ export default function FoodSearch() {
         </Pressable>
       </View>
 
-      {/* Food list */}
       <FlatList
         data={filteredFoods}
         keyExtractor={(item) => item.id}
@@ -281,7 +277,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   tabActive: {
-    // backgroundColor set dynamically
   },
   tabText: {
     fontSize: 14,

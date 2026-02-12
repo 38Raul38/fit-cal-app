@@ -1,5 +1,4 @@
 import { useRouter } from "expo-router";
-import { useProfile } from "../context/ProfileContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
     Dimensions,
@@ -11,12 +10,12 @@ import {
     Text,
     View,
 } from "react-native";
+import { useProfile } from "../context/ProfileContext";
 
 const ITEM_WIDTH = 20;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SIDE_PADDING = SCREEN_WIDTH / 2;
 
-/* ── value ranges ── */
 const MIN_DAY = 1;
 const MAX_DAY = 31;
 const MIN_MONTH = 1;
@@ -33,7 +32,6 @@ const dayValues = Array.from({ length: MAX_DAY - MIN_DAY + 1 }, (_, i) => MIN_DA
 const monthValues = Array.from({ length: MAX_MONTH - MIN_MONTH + 1 }, (_, i) => MIN_MONTH + i);
 const yearValues = Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }, (_, i) => MIN_YEAR + i);
 
-/* ═══════════════════════════════════════════ */
 export default function Birthdate() {
   const router = useRouter();
   const { updateProfile } = useProfile();
@@ -47,7 +45,6 @@ export default function Birthdate() {
   const yearRef = useRef<ScrollView>(null);
   const mounted = useRef(false);
 
-  /* scroll to defaults on mount */
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
@@ -70,7 +67,6 @@ export default function Birthdate() {
     [],
   );
 
-  /* compute age */
   const today = new Date();
   const birthDate = new Date(year, month - 1, day);
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -80,7 +76,6 @@ export default function Birthdate() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Text style={styles.backArrow}>←</Text>
@@ -96,7 +91,6 @@ export default function Birthdate() {
           We'll use this to personalize your plan
         </Text>
 
-        {/* ── Displayed value ── */}
         <View style={styles.dateDisplay}>
           <Text style={styles.dateText}>
             {MONTH_NAMES[month - 1]} {day}, {year}
@@ -104,7 +98,6 @@ export default function Birthdate() {
           <Text style={styles.ageText}>{age} years old</Text>
         </View>
 
-        {/* ── Day ruler ── */}
         <Text style={styles.rulerTitle}>Day</Text>
         <View style={styles.rulerWrapper}>
           <View style={styles.centerIndicator} />
@@ -141,7 +134,6 @@ export default function Birthdate() {
           </ScrollView>
         </View>
 
-        {/* ── Month ruler ── */}
         <Text style={styles.rulerTitle}>Month</Text>
         <View style={styles.rulerWrapper}>
           <View style={styles.centerIndicator} />
@@ -175,7 +167,6 @@ export default function Birthdate() {
           </ScrollView>
         </View>
 
-        {/* ── Year ruler ── */}
         <Text style={styles.rulerTitle}>Year</Text>
         <View style={styles.rulerWrapper}>
           <View style={styles.centerIndicator} />
@@ -213,7 +204,6 @@ export default function Birthdate() {
         </View>
       </View>
 
-      {/* Next */}
       <Pressable
         style={styles.buttonNext}
         onPress={() => {
@@ -232,7 +222,6 @@ export default function Birthdate() {
   );
 }
 
-/* ═══════════ styles ═══════════ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -282,7 +271,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
-  /* Date display */
   dateDisplay: {
     alignItems: "center",
     marginBottom: 28,
@@ -299,7 +287,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  /* Ruler shared */
   rulerTitle: {
     fontSize: 14,
     fontWeight: "700",
@@ -358,7 +345,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
-  /* Button */
   buttonNext: {
     marginHorizontal: 24,
     marginBottom: 40,

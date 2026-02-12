@@ -69,7 +69,6 @@ export default function ActivityLevelScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -84,7 +83,6 @@ export default function ActivityLevelScreen() {
         Not counting workouts — we'll track those separately.
       </Text>
 
-      {/* Level cards */}
       {LEVELS.map((lvl) => {
         const active = selected === lvl.key;
         return (
@@ -154,7 +152,6 @@ export default function ActivityLevelScreen() {
         );
       })}
 
-      {/* Info box */}
       <View style={[styles.infoBox, { backgroundColor: colors.card }]}>
         <Ionicons name="information-circle-outline" size={20} color={colors.accent} />
         <Text style={[styles.infoText, { color: colors.textSecondary }]}>
@@ -163,7 +160,6 @@ export default function ActivityLevelScreen() {
         </Text>
       </View>
 
-      {/* Save */}
       <Pressable
         style={[styles.saveBtn, { backgroundColor: colors.text }]}
         onPress={handleSave}
@@ -204,7 +200,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
 
-  /* Cards */
   card: {
     flexDirection: "row",
     alignItems: "center",
@@ -243,7 +238,6 @@ const styles = StyleSheet.create({
   },
   radioDot: { width: 10, height: 10, borderRadius: 5 },
 
-  /* Info */
   infoBox: {
     flexDirection: "row",
     marginHorizontal: 20,
@@ -255,7 +249,6 @@ const styles = StyleSheet.create({
   },
   infoText: { flex: 1, fontSize: 13, lineHeight: 19 },
 
-  /* Save */
   saveBtn: {
     marginHorizontal: 20,
     marginTop: 24,

@@ -1,16 +1,16 @@
 import { useRouter } from "expo-router";
-import { useProfile } from "../context/ProfileContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-    Dimensions,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Dimensions,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
+import { useProfile } from "../context/ProfileContext";
 
 const ITEM_WIDTH = 20;
 const MIN_HEIGHT = 140;
@@ -30,7 +30,6 @@ export default function Height() {
     (_, i) => MIN_HEIGHT + i,
   );
 
-  // Scroll to initial value on mount
   useEffect(() => {
     if (!didMount.current) {
       didMount.current = true;
@@ -69,7 +68,6 @@ export default function Height() {
           <Text style={styles.selectedValue}>{height} cm</Text>
 
           <View style={styles.rulerWrapper}>
-            {/* Center indicator line */}
             <View style={styles.centerIndicator} />
 
             <ScrollView

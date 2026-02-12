@@ -4,11 +4,11 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 export default function Results() {
   const router = useRouter();
   
-  // Здесь будет логика расчёта калорий на основе данных пользователя
-  const dailyCalories = 2450; // Пример расчёта
-  const protein = 180; // г
-  const carbs = 250; // г
-  const fats = 70; // г
+  // Logic to calculate
+  const dailyCalories = 2450;
+  const protein = 180;
+  const carbs = 250;
+  const fats = 70; 
 
   return (
     <View style={styles.container}>

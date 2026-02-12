@@ -37,7 +37,6 @@ export default function EditProfile() {
     { key: "gain" as const, label: "Gain Weight", icon: "trending-up-outline" as const },
   ];
 
-  /* ── Photo picker ── */
   const pickFromLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -122,7 +121,6 @@ export default function EditProfile() {
           <View style={{ width: 40 }} />
         </View>
 
-        {/* Avatar */}
         <View style={styles.avatarSection}>
           <Pressable onPress={handleChangePhoto}>
             {avatarUri ? (
@@ -147,7 +145,6 @@ export default function EditProfile() {
           </Pressable>
         </View>
 
-        {/* Form */}
         <View style={styles.form}>
           <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>
             Personal Information
@@ -242,7 +239,6 @@ export default function EditProfile() {
           </View>
         </View>
 
-        {/* Save button */}
         <Pressable
           style={[styles.saveBtn, { backgroundColor: colors.text }]}
           onPress={handleSave}
@@ -325,7 +321,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  /* Form */
   form: {
     paddingHorizontal: 20,
   },
@@ -362,7 +357,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  /* Goals */
   goalRow: {
     flexDirection: "row",
     gap: 10,
@@ -379,7 +373,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
-  /* Save */
   saveBtn: {
     marginHorizontal: 20,
     marginTop: 30,

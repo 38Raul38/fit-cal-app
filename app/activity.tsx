@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
-import { useProfile } from "../context/ProfileContext";
 import { useEffect, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { useProfile } from "../context/ProfileContext";
 
 type ActivityLevel = "not_active" | "light" | "active" | "very_active";
 
@@ -16,7 +16,6 @@ export default function Activity() {
     very_active: new Animated.Value(1),
   });
 
-  // Анимация появления
   const [fadeAnims] = useState({
     title: new Animated.Value(0),
     not_active: new Animated.Value(0),
@@ -26,7 +25,6 @@ export default function Activity() {
   });
 
   useEffect(() => {
-    // Поэтапное появление элементов
     Animated.stagger(150, [
       Animated.timing(fadeAnims.title, {
         toValue: 1,

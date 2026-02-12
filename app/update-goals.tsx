@@ -49,7 +49,6 @@ export default function UpdateGoals() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Header */}
         <View style={styles.header}>
           <Pressable onPress={() => router.back()} style={styles.backBtn}>
             <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -58,7 +57,6 @@ export default function UpdateGoals() {
           <View style={{ width: 40 }} />
         </View>
 
-        {/* Goal selection */}
         <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>
           Fitness Goal
         </Text>
@@ -99,13 +97,11 @@ export default function UpdateGoals() {
           );
         })}
 
-        {/* Macro targets */}
         <Text style={[styles.sectionLabel, { color: colors.textSecondary, marginTop: 28 }]}>
           Daily Targets
         </Text>
 
         <View style={[styles.macroCard, { backgroundColor: colors.card }]}>
-          {/* Calories */}
           <View style={styles.macroRow}>
             <View style={styles.macroLeft}>
               <Text style={styles.macroEmoji}>🔥</Text>
@@ -125,7 +121,6 @@ export default function UpdateGoals() {
 
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-          {/* Protein */}
           <View style={styles.macroRow}>
             <View style={styles.macroLeft}>
               <Text style={styles.macroEmoji}>🍎</Text>
@@ -145,7 +140,6 @@ export default function UpdateGoals() {
 
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-          {/* Carbs */}
           <View style={styles.macroRow}>
             <View style={styles.macroLeft}>
               <Text style={styles.macroEmoji}>🌾</Text>
@@ -165,7 +159,6 @@ export default function UpdateGoals() {
 
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-          {/* Fat */}
           <View style={styles.macroRow}>
             <View style={styles.macroLeft}>
               <Text style={styles.macroEmoji}>💧</Text>
@@ -184,7 +177,6 @@ export default function UpdateGoals() {
           </View>
         </View>
 
-        {/* Summary */}
         <View style={[styles.summaryCard, { backgroundColor: colors.card }]}>
           <Text style={[styles.summaryTitle, { color: colors.text }]}>Macro Split</Text>
           <View style={styles.barRow}>
@@ -214,7 +206,6 @@ export default function UpdateGoals() {
           </View>
         </View>
 
-        {/* Save */}
         <Pressable
           style={[styles.saveBtn, { backgroundColor: colors.text }]}
           onPress={handleSave}
@@ -251,7 +242,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
-  /* Goal cards */
   goalCard: {
     flexDirection: "row",
     alignItems: "center",
@@ -282,7 +272,6 @@ const styles = StyleSheet.create({
   },
   radioDot: { width: 10, height: 10, borderRadius: 5 },
 
-  /* Macro card */
   macroCard: {
     marginHorizontal: 20,
     borderRadius: 20,
@@ -310,7 +299,6 @@ const styles = StyleSheet.create({
   macroUnit: { fontSize: 14, fontWeight: "500" },
   divider: { height: 1, marginHorizontal: 16 },
 
-  /* Summary */
   summaryCard: {
     marginHorizontal: 20,
     marginTop: 14,
@@ -325,7 +313,6 @@ const styles = StyleSheet.create({
   legendDot: { width: 8, height: 8, borderRadius: 4 },
   legendText: { fontSize: 12, fontWeight: "600" },
 
-  /* Save */
   saveBtn: {
     marginHorizontal: 20,
     marginTop: 28,

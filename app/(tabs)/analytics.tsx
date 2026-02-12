@@ -16,7 +16,7 @@ interface GoalMetric {
   label: string;
   target: string;
   achieved: string;
-  progress: number; // 0-1
+  progress: number;
 }
 
 export default function Analytics() {
@@ -32,7 +32,6 @@ export default function Analytics() {
     { label: "Workout Days", target: "60", achieved: "48", progress: 0.8 },
   ];
 
-  // Mock daily calories data
   const dailyData = [0, 0, 0, 0, 0, 0, 0];
   const maxY = 4;
 
@@ -51,7 +50,6 @@ export default function Analytics() {
     >
       <Text style={[styles.title, { color: colors.text }]}>Analytics</Text>
 
-      {/* Goal Progress Card */}
       <View style={[styles.card, { backgroundColor: colors.card }]}>
         <Text style={[styles.cardTitle, { color: colors.text }]}>Goal Progress</Text>
 
@@ -113,7 +111,6 @@ export default function Analytics() {
         ))}
       </View>
 
-      {/* Total Calories Card */}
       <View style={[styles.card, { backgroundColor: colors.card }]}>
         <Text style={[styles.cardTitle, { color: colors.text }]}>Total Calories</Text>
 
@@ -171,7 +168,6 @@ export default function Analytics() {
         </View>
       </View>
 
-      {/* Trend Analysis Card */}
       <View style={[styles.card, { backgroundColor: colors.card }]}>
         <Text style={[styles.cardTitle, { color: colors.text }]}>Trend Analysis</Text>
 
@@ -233,7 +229,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
-  /* Card */
   card: {
     backgroundColor: "#F7F7F9",
     borderRadius: 24,
@@ -247,7 +242,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  /* Filters */
   filterRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -272,7 +266,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
 
-  /* Table */
   tableHeader: {
     flexDirection: "row",
     paddingBottom: 12,
@@ -317,7 +310,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
 
-  /* Chart area */
   chartLabel: {
     fontSize: 18,
     fontWeight: "700",
@@ -380,7 +372,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 
-  /* Trend line */
   trendLineWrap: {
     position: "absolute",
     bottom: 28,
@@ -423,7 +414,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
 
-  /* Stats grid */
   statsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",

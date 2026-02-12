@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 
-/* ───── regex rules ───── */
 const EMAIL_RE = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
 const PWD_MIN_LENGTH = 8;
 const PWD_UPPERCASE = /[A-Z]/;
@@ -21,7 +20,6 @@ const PWD_LOWERCASE = /[a-z]/;
 const PWD_DIGIT = /\d/;
 const PWD_SPECIAL = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
-/* ───── helpers ───── */
 function validateEmail(v: string) {
   if (!v) return "Email is required";
   if (!EMAIL_RE.test(v)) return "Invalid email format";
@@ -47,7 +45,6 @@ const pwdRules: PwdRule[] = [
   { label: "Special character", test: (v) => PWD_SPECIAL.test(v) },
 ];
 
-/* ═══════════════════════════════════════════ */
 export default function SignUp() {
   const router = useRouter();
   const { colors } = useTheme();
@@ -60,7 +57,6 @@ export default function SignUp() {
   const [secureConfirm, setSecureConfirm] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  /* touched flags — show errors only after user interacted */
   const [touched, setTouched] = useState({
     name: false,
     email: false,
@@ -71,7 +67,6 @@ export default function SignUp() {
   const touch = (field: keyof typeof touched) =>
     setTouched((p) => ({ ...p, [field]: true }));
 
-  /* derived errors */
   const nameErr = touched.name && !name.trim() ? "Name is required" : "";
   const emailErr = touched.email ? validateEmail(email) : "";
   const passErr = touched.password ? validatePassword(password) : "";
@@ -88,14 +83,12 @@ export default function SignUp() {
     setTouched({ name: true, email: true, password: true, confirm: true });
     if (!formValid) return;
     setLoading(true);
-    // TODO: real API call
     setTimeout(() => {
       setLoading(false);
       router.replace("/goals");
     }, 1200);
   }, [formValid, router]);
 
-  /* ─── UI ─── */
   return (
     <KeyboardAvoidingView
       style={[styles.flex, { backgroundColor: colors.bg }]}
@@ -105,7 +98,6 @@ export default function SignUp() {
         contentContainerStyle={styles.scroll}
         keyboardShouldPersistTaps="handled"
       >
-        {/* back */}
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <Text style={[styles.backText, { color: colors.text }]}>← Back</Text>
         </Pressable>
@@ -115,7 +107,6 @@ export default function SignUp() {
           Sign up to start tracking your nutrition
         </Text>
 
-        {/* ─── Name ─── */}
         <Text style={[styles.label, { color: colors.textSecondary }]}>Name</Text>
         <TextInput
           style={[
@@ -135,7 +126,6 @@ export default function SignUp() {
         />
         {!!nameErr && <Text style={[styles.err, { color: colors.danger }]}>{nameErr}</Text>}
 
-        {/* ─── Email ─── */}
         <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
         <TextInput
           style={[
@@ -157,7 +147,6 @@ export default function SignUp() {
         />
         {!!emailErr && <Text style={[styles.err, { color: colors.danger }]}>{emailErr}</Text>}
 
-        {/* ─── Password ─── */}
         <Text style={[styles.label, { color: colors.textSecondary }]}>Password</Text>
         <View style={styles.passRow}>
           <TextInput
@@ -189,7 +178,6 @@ export default function SignUp() {
         </View>
         {!!passErr && <Text style={[styles.err, { color: colors.danger }]}>{passErr}</Text>}
 
-        {/* password strength checklist */}
         {touched.password && (
           <View style={styles.rulesList}>
             {pwdRules.map((r) => {
@@ -209,7 +197,6 @@ export default function SignUp() {
           </View>
         )}
 
-        {/* ─── Confirm password ─── */}
         <Text style={[styles.label, { color: colors.textSecondary }]}>
           Confirm password
         </Text>
@@ -245,7 +232,6 @@ export default function SignUp() {
           <Text style={[styles.err, { color: colors.danger }]}>{confirmErr}</Text>
         )}
 
-        {/* ─── Submit ─── */}
         <Pressable
           style={({ pressed }) => [
             styles.button,
@@ -271,7 +257,6 @@ export default function SignUp() {
           )}
         </Pressable>
 
-        {/* ─── Link to Sign In ─── */}
         <Pressable onPress={() => router.push("/signIn")} style={styles.linkWrap}>
           <Text style={[styles.linkLabel, { color: colors.textSecondary }]}>
             Already have an account?{" "}
@@ -283,7 +268,6 @@ export default function SignUp() {
   );
 }
 
-/* ═══════════ styles ═══════════ */
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   scroll: {

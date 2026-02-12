@@ -60,7 +60,6 @@ export default function Home() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* Calories Card */}
       <View style={[styles.caloriesCard, { backgroundColor: colors.card }]}>
         <View style={styles.caloriesRow}>
           <View>
@@ -86,7 +85,6 @@ export default function Home() {
         </View>
       </View>
 
-      {/* Macros Row */}
       <View style={styles.macrosRow}>
         <View style={[styles.macroCard, { backgroundColor: colors.card }]}>
           <Text style={[styles.macroValue, { color: colors.text }]}>
@@ -113,7 +111,6 @@ export default function Home() {
         </View>
       </View>
 
-      {/* Water Intake */}
       <View style={[styles.waterCard, { backgroundColor: colors.card }]}>
         <View style={styles.waterHeader}>
           <View style={styles.waterTitleRow}>
@@ -185,7 +182,6 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
 
-  /* Calories */
   caloriesCard: {
     backgroundColor: "#F7F7F9",
     borderRadius: 24,
@@ -229,7 +225,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
 
-  /* Macros */
   macrosRow: {
     flexDirection: "row",
     gap: 10,
@@ -260,7 +255,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
 
-  /* Water */
   waterCard: {
     backgroundColor: "#F7F7F9",
     borderRadius: 24,
