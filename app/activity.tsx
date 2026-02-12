@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { useProfile } from "../context/ProfileContext";
 import { useEffect, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -6,6 +7,7 @@ type ActivityLevel = "not_active" | "light" | "active" | "very_active";
 
 export default function Activity() {
   const router = useRouter();
+  const { updateProfile } = useProfile();
   const [activity, setActivity] = useState<ActivityLevel | null>(null);
   const [scaleAnim] = useState({
     not_active: new Animated.Value(1),
@@ -212,7 +214,10 @@ export default function Activity() {
               !activity && styles.buttonDisabled,
             ]}
             disabled={!activity}
-            onPress={() => router.push("/gender")}
+            onPress={() => {
+              if (activity) updateProfile({ activityLevel: activity });
+              router.push("/gender");
+            }}
           >
             <Text style={styles.buttonText}>Next</Text>
           </Pressable>

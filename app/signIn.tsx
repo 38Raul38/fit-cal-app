@@ -1,124 +1,242 @@
-// app/sign-in.tsx
-import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
+// app/signIn.tsx
 import { useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
+import {
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
+import { useTheme } from "../context/ThemeContext";
 
+/* ───── regex (same as signUp) ───── */
+const EMAIL_RE = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
+
+function validateEmail(v: string) {
+  if (!v) return "Email is required";
+  if (!EMAIL_RE.test(v)) return "Invalid email format";
+  return "";
+}
+
+function validatePassword(v: string) {
+  if (!v) return "Password is required";
+  if (v.length < 6) return "Password is too short";
+  return "";
+}
+
+/* ═══════════════════════════════════════════ */
 export default function SignIn() {
   const router = useRouter();
+  const { colors } = useTheme();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [securePass, setSecurePass] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const [touched, setTouched] = useState({ email: false, password: false });
+  const touch = (f: keyof typeof touched) =>
+    setTouched((p) => ({ ...p, [f]: true }));
+
+  const emailErr = touched.email ? validateEmail(email) : "";
+  const passErr = touched.password ? validatePassword(password) : "";
+  const formValid = !validateEmail(email) && !validatePassword(password);
+
+  const handleSignIn = useCallback(async () => {
+    setTouched({ email: true, password: true });
+    if (!formValid) return;
+    setLoading(true);
+    // TODO: real auth call
+    setTimeout(() => {
+      setLoading(false);
+      router.replace("/(tabs)/home");
+    }, 1000);
+  }, [formValid, router]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign in</Text>
-      <Text style={styles.subtitle}>
-        Enter your details to continue
-      </Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#8E8E93"
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#8E8E93"
-        secureTextEntry
-      />
-
-      <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          pressed && styles.pressed,
-        ]}
-        onPress={() => router.push("/")}
+    <KeyboardAvoidingView
+      style={[styles.flex, { backgroundColor: colors.bg }]}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.buttonText}>Continue</Text>
-      </Pressable>
+        {/* back */}
+        <Pressable onPress={() => router.back()} style={styles.backBtn}>
+          <Text style={[styles.backText, { color: colors.text }]}>← Back</Text>
+        </Pressable>
 
-      <Pressable onPress={() => router.push("/signUp")}>
-        <Text style={styles.linkText}>Create account</Text>
-      </Pressable>
+        <Text style={[styles.title, { color: colors.text }]}>Welcome back</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+          Enter your details to continue
+        </Text>
 
-      <Pressable onPress={() => router.back()} style={styles.back}>
-        <Text style={styles.backText}>← Back</Text>
-      </Pressable>
+        {/* ─── Email ─── */}
+        <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
+        <TextInput
+          style={[
+            styles.input,
+            {
+              backgroundColor: colors.inputBg,
+              borderColor: emailErr ? colors.danger : colors.inputBorder,
+              color: colors.text,
+            },
+          ]}
+          placeholder="example@mail.com"
+          placeholderTextColor={colors.textMuted}
+          value={email}
+          onChangeText={setEmail}
+          onBlur={() => touch("email")}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          autoComplete="email"
+        />
+        {!!emailErr && (
+          <Text style={[styles.err, { color: colors.danger }]}>{emailErr}</Text>
+        )}
 
-    </View>
+        {/* ─── Password ─── */}
+        <Text style={[styles.label, { color: colors.textSecondary }]}>Password</Text>
+        <View style={styles.passRow}>
+          <TextInput
+            style={[
+              styles.input,
+              styles.passInput,
+              {
+                backgroundColor: colors.inputBg,
+                borderColor: passErr ? colors.danger : colors.inputBorder,
+                color: colors.text,
+              },
+            ]}
+            placeholder="••••••••"
+            placeholderTextColor={colors.textMuted}
+            value={password}
+            onChangeText={setPassword}
+            onBlur={() => touch("password")}
+            secureTextEntry={securePass}
+            autoComplete="current-password"
+          />
+          <Pressable
+            style={styles.eyeBtn}
+            onPress={() => setSecurePass((p) => !p)}
+          >
+            <Text style={{ color: colors.textSecondary, fontSize: 14 }}>
+              {securePass ? "Show" : "Hide"}
+            </Text>
+          </Pressable>
+        </View>
+        {!!passErr && (
+          <Text style={[styles.err, { color: colors.danger }]}>{passErr}</Text>
+        )}
+
+        {/* forgot password */}
+        <Pressable style={styles.forgotWrap}>
+          <Text style={[styles.forgotText, { color: colors.textSecondary }]}>
+            Forgot password?
+          </Text>
+        </Pressable>
+
+        {/* ─── Submit ─── */}
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            {
+              backgroundColor: formValid ? colors.black : colors.cardAlt,
+            },
+            pressed && formValid && { opacity: 0.85 },
+          ]}
+          onPress={handleSignIn}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <Text
+              style={[
+                styles.buttonText,
+                { color: formValid ? "#FFF" : colors.textMuted },
+              ]}
+            >
+              Sign in
+            </Text>
+          )}
+        </Pressable>
+
+        {/* ─── Link to Sign Up ─── */}
+        <Pressable onPress={() => router.push("/signUp")} style={styles.linkWrap}>
+          <Text style={[styles.linkLabel, { color: colors.textSecondary }]}>
+            Don't have an account?{" "}
+            <Text style={[styles.linkBold, { color: colors.text }]}>
+              Create account
+            </Text>
+          </Text>
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
+/* ═══════════ styles ═══════════ */
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
+  flex: { flex: 1 },
+  scroll: {
+    flexGrow: 1,
     paddingHorizontal: 24,
+    paddingTop: 60,
+    paddingBottom: 40,
     justifyContent: "center",
   },
 
-  title: {
-    fontSize: 34,
-    fontWeight: "800",
-    color: "#0F0F12",
-    marginBottom: 6,
-  },
+  backBtn: { alignSelf: "flex-start", marginBottom: 24, padding: 4 },
+  backText: { fontSize: 16, fontWeight: "600" },
 
-  subtitle: {
-    fontSize: 16,
-    color: "#6B6B70",
-    marginBottom: 28,
-  },
+  title: { fontSize: 32, fontWeight: "800", marginBottom: 6 },
+  subtitle: { fontSize: 16, marginBottom: 28 },
+
+  label: { fontSize: 13, fontWeight: "600", marginBottom: 6, marginLeft: 4 },
 
   input: {
     height: 54,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#E5E5EA",
     paddingHorizontal: 16,
     fontSize: 16,
-    color: "#0F0F12",
-    marginBottom: 12,
+    marginBottom: 4,
   },
+
+  passRow: { position: "relative" },
+  passInput: { paddingRight: 64 },
+  eyeBtn: {
+    position: "absolute",
+    right: 16,
+    top: 0,
+    height: 54,
+    justifyContent: "center",
+  },
+
+  err: { fontSize: 13, marginBottom: 8, marginLeft: 4 },
+
+  forgotWrap: { alignSelf: "flex-end", marginTop: 4, marginBottom: 8 },
+  forgotText: { fontSize: 14, fontWeight: "600" },
 
   button: {
     height: 62,
     borderRadius: 31,
-    backgroundColor: "#0F0F12",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 12,
     marginBottom: 14,
   },
 
-  pressed: {
-    opacity: 0.9,
-  },
+  buttonText: { fontSize: 18, fontWeight: "700" },
 
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "700",
-  },
-
-  linkText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#0F0F12",
-    textAlign: "center",
-  },
-
-  back: {
-  alignSelf: "flex-start",
-  marginBottom: 16,
-  borderWidth: 1,
-  borderColor: "transparent",
-  padding: 8,
-},
-
-backText: {
-  fontSize: 16,
-  color: "#0F0F12",
-  fontWeight: "600",
-},
+  linkWrap: { alignItems: "center", marginTop: 4 },
+  linkLabel: { fontSize: 15 },
+  linkBold: { fontWeight: "700" },
 });

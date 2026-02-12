@@ -1,9 +1,11 @@
 import { useRouter } from "expo-router";
+import { useProfile } from "../context/ProfileContext";
 import { useEffect, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Gender() {
   const router = useRouter();
+  const { updateProfile } = useProfile();
   const [gender, setGender] = useState<"male" | "female" | null>(null);
   const [scaleAnim] = useState({
     female: new Animated.Value(1),
@@ -132,7 +134,10 @@ export default function Gender() {
               !gender && styles.buttonDisabled,
             ]}
             disabled={!gender}
-            onPress={() => router.push("/height")}
+            onPress={() => {
+              if (gender) updateProfile({ gender });
+              router.push("/birthdate");
+            }}
           >
             <Text style={styles.buttonText}>Next</Text>
           </Pressable>

@@ -1,13 +1,55 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useProfile } from "../context/ProfileContext";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+    Dimensions,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
+
+const ITEM_WIDTH = 20;
+const MIN_HEIGHT = 140;
+const MAX_HEIGHT = 220;
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SIDE_PADDING = SCREEN_WIDTH / 2;
 
 export default function Height() {
   const router = useRouter();
+  const { updateProfile } = useProfile();
   const [height, setHeight] = useState(170);
+  const scrollRef = useRef<ScrollView>(null);
+  const didMount = useRef(false);
 
-  // Генерация значений для рулетки роста (140-220 см)
-  const heightValues = Array.from({ length: 81 }, (_, i) => 140 + i);
+  const heightValues = Array.from(
+    { length: MAX_HEIGHT - MIN_HEIGHT + 1 },
+    (_, i) => MIN_HEIGHT + i,
+  );
+
+  // Scroll to initial value on mount
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true;
+      const offset = (height - MIN_HEIGHT) * ITEM_WIDTH;
+      setTimeout(() => {
+        scrollRef.current?.scrollTo({ x: offset, animated: false });
+      }, 50);
+    }
+  }, []);
+
+  const handleScroll = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const offsetX = e.nativeEvent.contentOffset.x;
+      let value = Math.round(offsetX / ITEM_WIDTH) + MIN_HEIGHT;
+      value = Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, value));
+      setHeight(value);
+    },
+    [],
+  );
 
   return (
     <View style={styles.container}>
@@ -25,46 +67,61 @@ export default function Height() {
 
         <View style={styles.pickerContainer}>
           <Text style={styles.selectedValue}>{height} cm</Text>
-          
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.ruler}
-            snapToInterval={20}
-            decelerationRate="fast"
-          >
-            {heightValues.map((value, index) => {
-              const isSelected = value === height;
-              const isMajor = value % 10 === 0;
-              
-              return (
-                <Pressable
-                  key={value}
-                  onPress={() => setHeight(value)}
-                  style={styles.rulerItem}
-                >
-                  <View
-                    style={[
-                      styles.rulerLine,
-                      isMajor && styles.rulerLineMajor,
-                      isSelected && styles.rulerLineSelected,
-                    ]}
-                  />
-                  {isMajor && (
-                    <Text style={[styles.rulerLabel, isSelected && styles.rulerLabelSelected]}>
-                      {value}
-                    </Text>
-                  )}
-                </Pressable>
-              );
-            })}
-          </ScrollView>
+
+          <View style={styles.rulerWrapper}>
+            {/* Center indicator line */}
+            <View style={styles.centerIndicator} />
+
+            <ScrollView
+              ref={scrollRef}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={[
+                styles.ruler,
+                { paddingHorizontal: SIDE_PADDING },
+              ]}
+              snapToInterval={ITEM_WIDTH}
+              decelerationRate="fast"
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
+            >
+              {heightValues.map((value) => {
+                const isSelected = value === height;
+                const isMajor = value % 10 === 0;
+
+                return (
+                  <View key={value} style={styles.rulerItem}>
+                    <View
+                      style={[
+                        styles.rulerLine,
+                        isMajor && styles.rulerLineMajor,
+                        isSelected && styles.rulerLineSelected,
+                      ]}
+                    />
+                    {isMajor && (
+                      <Text
+                        style={[
+                          styles.rulerLabel,
+                          isSelected && styles.rulerLabelSelected,
+                        ]}
+                      >
+                        {value}
+                      </Text>
+                    )}
+                  </View>
+                );
+              })}
+            </ScrollView>
+          </View>
         </View>
       </View>
 
       <Pressable
         style={styles.buttonNext}
-        onPress={() => router.push("/weight")}
+        onPress={() => {
+          updateProfile({ height: String(height) });
+          router.push("/weight");
+        }}
       >
         <Text style={styles.buttonText}>Next</Text>
       </Pressable>
@@ -124,13 +181,27 @@ const styles = StyleSheet.create({
     color: "#0F0F12",
     marginBottom: 40,
   },
+  rulerWrapper: {
+    position: "relative",
+    width: "100%",
+  },
+  centerIndicator: {
+    position: "absolute",
+    left: "50%",
+    marginLeft: -1.5,
+    top: 0,
+    width: 3,
+    height: 65,
+    backgroundColor: "#0F0F12",
+    borderRadius: 2,
+    zIndex: 10,
+  },
   ruler: {
-    paddingHorizontal: 24,
     alignItems: "flex-end",
     paddingVertical: 20,
   },
   rulerItem: {
-    width: 20,
+    width: ITEM_WIDTH,
     alignItems: "center",
     justifyContent: "flex-end",
   },

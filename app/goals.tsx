@@ -1,5 +1,6 @@
 // app/goals.tsx
 import { useRouter } from "expo-router";
+import { useProfile } from "../context/ProfileContext";
 import { useEffect, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -7,6 +8,7 @@ type Goal = "lose" | "maintain" | "gain";
 
 export default function Goals() {
   const router = useRouter();
+  const { updateProfile } = useProfile();
   const [goal, setGoal] = useState<Goal | null>(null);
   const [scaleAnim] = useState({
     lose: new Animated.Value(1),
@@ -144,7 +146,10 @@ export default function Goals() {
           <Pressable
             style={[styles.buttonNext, !goal && styles.buttonDisabled]}
             disabled={!goal}
-            onPress={() => router.push("/activity")}
+            onPress={() => {
+              if (goal) updateProfile({ goal });
+              router.push("/activity");
+            }}
           >
             <Text style={styles.buttonText}>Next</Text>
           </Pressable>

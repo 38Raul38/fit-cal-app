@@ -59,7 +59,7 @@ export default function Results() {
 
         <Pressable
           style={styles.buttonNext}
-          onPress={() => router.push("/")}
+          onPress={() => router.replace("/(tabs)/home")}
         >
           <Text style={styles.buttonText}>Continue</Text>
         </Pressable>
